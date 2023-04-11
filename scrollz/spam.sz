@@ -1,0 +1,207 @@
+##:: Spam v1.o -AndrewX
+##:: !
+##:: Simplicity!!!!
+
+:: assigns
+
+^eval assign black $color(black)
+^eval assign cyan $color(cyan)
+^eval assign red $color(red)
+^eval assign green $color(green)
+^eval assign purple $color(purple)
+^eval assign blue $color(blue)
+^eval assign white $color(white)
+^eval assign bcyan $color(bold,cyan)
+^eval assign bred $color(bold,red)
+^eval assign bgreen $color(bold,green)
+^eval assign bpurple $color(bold,purple)
+^eval assign bblue $color(bold,blue)
+^eval assign bgblue $color(bluebg,blue)
+^eval assign bgcyan $color(bluebg,cyan)
+^eval assign bgwhite $color(bluebg,white)
+^eval assign bbgcyan $color(bluebg,bold,cyan)
+^eval assign bbgblue $color(bluebg,bold,blue)
+^eval assign bbggreen $color(bluebg,bold,green)
+^eval assign bbgred $color(bluebg,bold,red)
+^eval assign bbgpurple $color(bluebg,bold,purple)
+^eval assign bbgwhite $color(bluebg,bold,white)
+^eval assign bwhite $color(bold,white)
+
+:: variables
+
+@ botnick = [(Cli]
+@ bottype = [dancer]
+@ botegg  = [(Tampone]
+@ channel = [#test]
+@ msgspam = [No spamming!]
+@ msgadvs = [No advertising!]
+@ notspam = [No spamming!]
+@ notadvs = [No advertising!]
+@ pubspam = [No spamming!]
+@ pubadvs = [No advertising!]
+@ pubgret = [No greetings!]
+@ pubfsrv = [No F-Servers!]
+@ actadvs = [No advertising!]
+@ pubt    = [off]
+@ msgt    = [on]
+@ nott    = [on]
+
+on ^window "% % % *#test      : * members (* chops), * bans*" #
+on ^window "% % % *#test     : * exemptions, * invites*" #
+on ^window "% % % *GetOps: *" #
+on ^window "% % % *Writing user file*" #
+on ^window "% % % *Writing channel file*" #
+on ^window "% % % *Telnet connection:*" #
+on ^window "% % % *Bad Password:*" #
+on ^window "% % % *Timeout/EOF ident connection*" #
+on ^window "% % % *Lost connection while identing*" #
+
+on ^connect "*" {
+   /join #test
+}
+
+if ([${nott}]==[on]) {
+ on ^notice "% BabyChat*" {
+   /quote PRIVMSG $botnick :pass $2
+   /quote PRIVMSG $botnick :client
+   /dcc chat $botnick
+ }
+ on ^notice "% DCC Send*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $1 $2: $3-)
+ }
+ on ^notice "% *dynamirc*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $notadvs)
+ }
+ on ^notice "% *http://*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $notadvs)
+ }
+ on ^notice "% *www.*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $notadvs)
+ }
+ on ^notice "% System is currently busy, try again later*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $notspam)
+ }
+}
+
+if ([${msgt}]==[on]) {
+ on ^msg "% *Venom ScRipT*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% % join #*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% *dynamirc*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% *web cam*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% *http://*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% *www.*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% *#*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+ on ^msg "% *FOTO*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgspam)
+ }
+ on ^msg "% *Auto Messag*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgspam)
+ }
+ on ^msg "% *picture*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 25 $msgadvs)
+ }
+}
+
+if ([${pubt}]==[on]) {
+ on ^public "% % *http://*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $pubadvs)
+ }
+ on ^public "% % *www.*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $pubadvs)
+ }
+ on ^public "% % join #*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $pubadvs)
+ }
+ on ^public "% % Un Grosso Saluto a Tutto Il Canale < #* >" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $pubgret)
+ }
+ on ^public "% % *Fserve*!*Ratio*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $pubfsrv)
+ }
+ on ^public "% % *Server Active*!*Ratio*" {
+   echo ${blue}\[${white}o${bwhite}!${blue}\] ${bred}Alert${white}:${bblue}\(${white}$0${bblue}\) ${white}$1-${white}
+   $checkbot($0 30 $pubfsrv)
+ }
+}
+
+#on ^public "% % !seen*" {
+#  /msg =$botnick .show $C seen $3-
+#}
+
+#on ^public "% % !rules" {
+#  if (ischanop($0 $C)||isvoiced($0 $C)) {
+#    /msg =$botnick .show $C rules
+#  }
+#}
+
+alias spamlogo {
+   echo ${bwhite} .-${bblue}------------${blue}--${bblue}-----${blue}--- -- -
+   echo ${bblue}/  ${blue}.${bblue}.${white}.:${bwhite}:S${white}pam ${bwhite}v${white}1.o${wbhite}:${white}:.${bblue}.${blue}.
+   echo ${bwhite}`--${white}-${bwhite}-${white}--${bblue}----${blue}-${bblue}-----${blue}--------${bblue}[${bwhite}A${white}ndrew${bwhite}X${bblue}]${blue}- -- -- - -${white}
+}
+
+:: function: checkbot
+
+alias checkbot {
+   if ([$0]!=[$botegg]) {
+     if (!ischanop($0 $channel)&&!isvoiced($0 $channel)) {
+       if ([$bottype]==[dancer]) {
+          /quote PRIVMSG $botnick :.ban $0 $2-
+       }{
+          ^msg $botnick .+ban *!*@$hostextr($userhost($0)) $channel %0d0h$1m $1m/ban: $2-
+       }
+     }{
+       echo $0 is an op or not on $channel.
+     }
+   }
+}
+
+:: function: hostextr
+
+alias hostextr {
+   @ host = [$0]
+   @ count = [$@host]
+   @ ident = [$index(@ $0)]
+   @ uhost = count - ident + 1
+   @ function_return = [$right(${uhost} $0)]
+   ^assign -uhost
+   ^assign -ident
+   ^assign -count
+   ^assign -host
+}
+
+spamlogo
