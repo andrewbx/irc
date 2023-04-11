@@ -1,0 +1,691 @@
+##:: oPsession v0.91b -AndrewX
+##:: 24-05-2000
+
+:: script information
+
+^assign s.title o!
+^assign s.ver v0.91b
+^assign s.auth -AndrewX
+
+:: script variables
+
+@ awaylog  = [on]
+@ showjoin = [on]
+@ showpart = [on]
+@ showquit = [on]
+@ servpong = [0]
+@ bancount = [0]
+@ def.kick = [*boink*]
+@ def.ban  = [*boink*]
+@ def.away = [Zip..]
+@ def.back = [Psst.]
+@ psybnc   = [on]
+
+:: top-level domains
+
+@ tld[arpa] = [Reverse DNS]
+@ tld[rpa]  = [ArpaNET Old]
+@ tld[gov]  = [US Government]
+@ tld[mil]  = [US Military]
+@ tld[med]  = [US Medical]
+@ tld[com]  = [InterNIC Commercial]
+@ tld[org]  = [InterNIC Organization]
+@ tld[net]  = [InterNIC Network]
+@ tld[edu]  = [Educational Institution]
+@ tld[ad]   = [Andorra]
+@ tld[ae]   = [United Arab Emirates]
+@ tld[af]   = [Afghanistan]
+@ tld[ag]   = [Antigua & Barbuda]
+@ tld[ai]   = [Anguilla]
+@ tld[al]   = [Albania]
+@ tld[am]   = [Armenia]
+@ tld[an]   = [Antilles Netherlands]
+@ tld[ao]   = [Angola]
+@ tld[aq]   = [Antarctica] 
+@ tld[ar]   = [Argentina]
+@ tld[as]   = [American Samoa]
+@ tld[at]   = [Austria]
+@ tld[au]   = [Australia]
+@ tld[aw]   = [Aruba]
+@ tld[az]   = [Azerbaijan]
+@ tld[ba]   = [Bosnia & Herzegovina]
+@ tld[bb]   = [Barbados]
+@ tld[bd]   = [Bangladesh]
+@ tld[be]   = [Belgium]
+@ tld[bf]   = [Burkina Faso]
+@ tld[bg]   = [Bulgaria]
+@ tld[bh]   = [Bahrain]
+@ tld[bi]   = [Burundi]
+@ tld[bj]   = [Benin]
+@ tld[bm]   = [Bermuda]
+@ tld[bn]   = [Brunei Darussalam]
+@ tld[bo]   = [Bolivia]
+@ tld[br]   = [Brazil]
+@ tld[bs]   = [Bahamas]
+@ tld[bt]   = [Bhutan]
+@ tld[bv]   = [Bouvet Island]
+@ tld[bw]   = [Botswana]
+@ tld[by]   = [Belarus]
+@ tld[bz]   = [Belize]
+@ tld[uk]   = [United Kingdom]
+@ tld[dk]   = [Denmark]
+@ tld[nl]   = [Netherlands]
+@ tld[us]   = [United States]
+@ tld[gr]   = [Greece]
+@ tld[pl]   = [Poland]
+@ tld[my]   = [Malaysia]
+@ tld[jp]   = [Japan]
+
+^eval assign black $color(black)
+^eval assign cyan $color(cyan)
+^eval assign red $color(red)
+^eval assign green $color(green)
+^eval assign purple $color(purple)
+^eval assign blue $color(blue)
+^eval assign white $color(white)
+^eval assign bcyan $color(bold,cyan)
+^eval assign bred $color(bold,red)
+^eval assign bgreen $color(bold,green)
+^eval assign bpurple $color(bold,purple)
+^eval assign bblue $color(bold,blue)
+^eval assign bgblue $color(bluebg,blue)
+^eval assign bgcyan $color(bluebg,cyan)
+^eval assign bgwhite $color(bluebg,white)
+^eval assign bbgcyan $color(bluebg,bold,cyan)
+^eval assign bbgblue $color(bluebg,bold,blue)
+^eval assign bbggreen $color(bluebg,bold,green)
+^eval assign bbgred $color(bluebg,bold,red)
+^eval assign bbgpurple $color(bluebg,bold,purple)
+^eval assign bbgwhite $color(bluebg,bold,white)
+^eval assign bwhite $color(bold,white)
+
+:: aliases
+
+alias cls clear -all
+alias help shelp
+alias away setaway
+alias back setback
+alias cls clear
+alias ex exec
+alias q quit
+alias exit quit
+alias bye quit
+alias k ok
+alias bk obk
+alias kb okb
+alias fkeys ofkeys
+alias raw quote
+
+:: psybnc support
+
+if ([${psybnc}]==[on]) {
+   alias pbwho {/quote bwho}
+   alias ppassword {/quote password}
+   alias pvhost {/quote vhost}
+   alias pproxy {/quote pproxy}
+   alias psetusername {/quote setusername}
+   alias psetaway {/quote setaway}
+   alias psetleavemsg {/quote setleavemsg}
+   alias pjump {/quote jump}
+   alias pbquit {/quote bquit}
+   alias pbconnect {/quote bconnect}
+   alias pacollide {/quote acollide}
+   alias paddserver {/quote addserver}
+   alias pdelserver {/quote delserver}
+   alias plistservers {/quote listservers}
+   alias paddallow {/quote addallow :$0-}
+   alias plistallow {/quote listallow}
+   alias pdelallow {/quote delallow}
+   alias phelp {/quote bhelp}
+   alias padduser {/quote padduser $0 :$1-}
+   alias pdeluser {/quote deluser}
+   alias paddban { 
+      if ([$2]) {
+        /quote addban $0 $1 :$2-
+      }{
+        /quote addban $C $0 :$1-
+      }
+   }
+   alias pdelban {/quote delban}
+   alias plistbans {/quote listbans}
+}
+
+:: binds
+
+bind F1 parse_command /ofkeys
+bind F2 parse_command /cscan -R
+bind F3 parse_command /chanst
+bind F4 parse_command /mode
+bind F5 parse_command /who
+bind F6 parse_command /showuser
+bind F7 parse_command /l
+bind F8 parse_command /p
+bind F9 parse_command /clean
+bind F10 parse_command /settings
+bind F11 parse_command /help keys
+
+:: sets
+
+set channel_name_width 18
+set debug 0
+set suppress_server_motd on
+set beep off
+set beep_on_msg off
+set ctcp_reply_ignore_seconds 9999
+set ctcp_reply_flood_size 9999
+set ctcp_reply_backlog_seconds 9999
+set send_ignore_msg off
+set load_path ~/.ScrollZ
+set help_path ~/.ScrollZ
+set hide_private_channels off
+set eight_bit_characters on
+set flood_rate 3
+set flood_users 3
+set flood_after 3
+set flood_warning off
+set show_end_of_msgs off
+set show_who_hopcount on
+set help_prompt off
+
+^mirc on
+^showaway off
+^set input_prompt ${blue}\(${bwhite}${T}${blue}\)${white} 
+^eval set client_information ${s.title}${s.ver} ${s.auth}
+^eval set scrollz_string ${blue}\[${white}o${bwhite}!${blue}\]${white}
+^eval assign szs ${scrollz_string}
+^eval assign szsnc ${s.title}
+^igtime 99999
+
+:: client colours
+
+color  warning   bold,red  bold,white  bold,yellow  bold,cyan  white  white
+color  join      bold,cyan  cyan  bold,green  white  bold,white  bold,blue
+color  msg       bold,cyan  blue  white  bold,cyan  bold,blue  bold,white
+color  notice    bold,cyan  blue  white  bold,blue  bold,blue  white
+color  netsplit  bold,white white  white  bold,cyan  cyan bold,blue
+color  invite    bold,cyan  blue  bold,cyan  bold,red  white  white
+color  mode      bold,cyan  bold,cyan  bold,green  bold,yellow  bold,white  bold,red
+color  setting   bold,white  bold,blue  bold,yellow  blue  bold,cyan  white
+color  help      bold,cyan  bold,blue  cyan  bold,blue  bold,cyan  white
+color  leave     bold,cyan  bold,green  bold,red  bold,cyan  bold,red  white
+color  notify    bold,cyan  purple  bold,black  bold,white  bold,cyan  bold,cyan
+color  ctcp      bold,cyan  purple  bold,cyan  bold,cyan  white  bold,blue
+color  kick      bold,cyan  bold,cyan  bold,green  white  bold,white  bold,cyan
+color  dcc       bold,cyan  blue  bold,cyan  cyan  bold,cyan  bold,blue
+color  who       bold,white  bold,blue  cyan  white  white  bold,cyan
+color  whois     bold,white  bold,blue  cyan  bold,white  bold,cyan  bold,purple
+color  public    white  blue  cyan  bold,cyan  white  cyan
+color  cdcc      cyan  blue  bold,blue  bold,blue  cyan  bold,cyan
+color  links     cyan  bold,cyan  bold,blue  bold,white  blue  white
+color  dccchat   bold,red  bold,blue  white  bold,red  red  white
+color  cscan     cyan  bold,blue  bold,white  bold,green  bold,blue  bold,blue
+color  nick      cyan  white  cyan  cyan  bold,purple  white
+color  me        bold,white  bold,cyan  cyan  bold,cyan  white  white
+color  misc      bold,white  bold,white  white  white  white  white
+color  sbar      blackbg  bold,green  bold,purple  bold,red  bold,yellow  white,nobold
+color  sbar2     bold,cyan  cyan  bold,white  bold,yellow,redbg  white  white
+color  ov        cyan  cyan  white  bold,cyan  white  bold,blue
+
+:: status bar
+
+^eval set status_reverse on
+^on ^window "*Unmatched*" {}
+^eval set status_reverse off
+^eval set status_mode ${bbgblue}[${bbgcyan}+%+${bbgblue}\]
+^eval set status_query ${bbgblue}\[${bgwhite}query${bbgblue}:${bgwhite}%Q${bbgblue}\]
+^eval set status_away ${bbgblue}\[${bgwhite}away${bbgblue}:${bgwhite}%A${bbgblue}${bbgblue}\]
+^eval set status_window ~~
+^eval set status_channel ${bbgblue}\[${bgwhite}chan${bbgblue}:${bbgwhite}%C${bbgblue}\]
+^eval set status_chanop ${bbgpurple}@
+^eval set status_oper *
+^eval set status_umode ${bbgblue}\[${bbggreen}+%#${bbgblue}\]
+^eval set status_channelcount ${bbgblue}\[${bgwhite}O${bbgblue}:${bbgwhite}%o ${bgwhite}N${bbgblue}:${bbgwhite}%n ${bgwhite}T${bbgblue}:${bbgwhite}%t${bbgblue}\]
+^eval set show_channel_names on
+^eval set status_clock ${bbgblue}\[${bgwhite}time${bbgblue}:${bbgwhite}%T${bbgblue}\]
+^eval set status_mail ${bbgblue}\[${bbgbwhite}mail${bbgblue}:${bbgcyan}%M${bbgblue}\]
+^eval set status_user [*]
+^eval set status_format1 ${bbgblue}\[${bbggreen}%R${bbgblue}\] %*%@${bbgcyan}%N%#%C%+%A%Q%S%I%O %W %F%H %>${bbgblue}\[${bgwhite}sp${bbgblue}:${bbgwhite}${servpong}${bbgblue}\]%T${bbgblue}\[${bgwhite}lag${bbgblue}:${bbgwhite}%2${bbgblue}]
+^eval set status_format2 ${bbgblue}\[${bgwhite}%4${bbgblue}:${bgwhite}%5${bbgblue}:${bgwhite}%6${bbgblue}:${bgwhite}%7${bbgblue}:${bgwhite}%8${bbgblue}:${bgwhite}%D${bbgblue}:${bgwhite}%L${bbgblue}:${bgwhite}%P${bbgblue}:${bgwhite}%E${bbgblue}\] %>${bbgblue}\[${bgwhite}lj${bbgblue}:${bbgwhite}%3${bbgblue}\]${bbgblue}\[${bgwhite}help${bbgblue}:${bbgwhite}F1${bbgblue}\]
+^eval set status_format3 ${bbgblue}%U %> [${bgwhite}topic${bbgblue}:${bgcyan}%9${bbgblue}]
+
+on ^window "% % *: PONG received from*" {
+  @ servpong = servpong + 1
+  if ([${servpong}]==[10]) {
+    @ servpong = [0]
+  }
+  ^eval set status_format1 ${bbgblue}\[${bbggreen}%R${bbgblue}\] %*%@${bbgcyan}%N%#%C%+%A%Q%S%I%O %W %F%H %>${bbgblue}\[${bgwhite}sp${bbgblue}:${bbgwhite}${servpong}${bbgblue}\]%T${bbgblue}\[${bgwhite}lag${bbgblue}:${bbgwhite}%2${bbgblue}]
+}
+
+on ^window "% % Users on*" {
+  echo ${szs} ${bwhite}----${white}--${bwhite}-${white}-------------------- - - - - - -
+  echo ${szs} ${bwhite}Users ${white}on $4 ${black}$5-
+}
+
+on ^join "*" {
+  if ([${showjoin}]==[on]) {
+     if ([$C]==[$1]) {
+        echo ${szs} ${bwhite}Joins${white}: ${bcyan}$0 ${blue}\(${bblue}$oextr($userhost())${blue}\)${white}
+     }{
+        echo ${szs} ${bwhite}Joins${white}:${cyan}$1${white}: ${bcyan}$0 ${blue}\(${bblue}$oextr($userhost())${blue}\)${white}
+     }
+  }
+}
+
+on ^leave "*" {
+  if ([${showpart}]==[on]) {
+     if ([$C]==[$1]) {
+        echo ${szs} ${bwhite}Parts${white}: ${bcyan}$0 ${blue}\(${bblue}$oextr($userhost())${blue}\) \(${purple}$2-${blue}\)${white}
+     }{
+        echo ${szs} ${bwhite}Parts${white}:${cyan}$1${white}: ${bcyan}$0 ${blue}\(${bblue}$oextr($userhost())${blue}\) \(${purple}$2-${blue}\)${white}
+     }
+  }
+}
+
+on ^public "% % # Appears as*" {
+  echo ${bblue}\(${white}$0${bblue}\) ${white}$2-
+  if (!ischanop($0 $C)&&!isvoiced($0 $C)) {
+     @ bancount = bancount + 1
+     if ([$bancount]==[3]) {
+        ban $0
+        @ bancount = [0]
+     }
+     quote kick $C $0 :${szsnc}k: Get yourself a real client. http://www.irchelp.org
+  }
+}
+
+on ^public "% % *http://*" {
+   echo ${bblue}\(${white}$0${bblue}\) ${white}$2-
+   if (!ischanop($0 $C)&&!isvoiced($0 $C)) {
+      @ bancount = bancount + 1
+      if ([$bancount]==[3]) {
+         ban $0
+         @ bancount = [0]
+      }
+      quote kick $C $0 :${szsnc}k: No advertising!
+   }
+}
+
+on ^public "% % *www.*" {
+   echo ${bblue}\(${white}$0${bblue}\) ${white}$2-
+   if (!ischanop($0 $C)&&!isvoiced($0 $C)) {
+      @ bancount = bancount + 1
+      if ([$bancount]==[3]) {
+         ban $0
+         @ bancount = [0]
+      }
+      quote kick $C $0 :${szsnc}k: No advertising!
+   }
+}
+
+on ^public "*" {
+     echo ${bblue}\(${white}$0${bblue}\) ${white}$2-${white}
+}
+
+on ^public_other "% % # Appears as*" {
+   echo ${bblue}\(${white}$0${white}:${cyan}$1${bblue}\) ${white}$2-
+   if (!ischanop($0 $1)&&!isvoiced($0 $1)) {
+      @ bancount = bancount + 1
+      if ([$bancount]==[3]) {
+         ban $0
+         @ bancount = 0
+      }
+      quote kick $1 $0 :${szsnc}k: Get yourself a real client. http://www.irchelp.org
+   }
+}
+
+on ^public_other "*" {
+     echo ${bblue}\(${white}$0${white}:${cyan}$1${bblue}\) ${white}$2-${white}
+}
+
+on ^channel_signoff "*" {
+  if ([${showquit}]==[on]) {
+     if ([$C]==[$0]) {
+        echo ${szs} ${bwhite}Quits${white}: ${bcyan}$1 ${blue}\(${purple}$2-${blue}\)${white}
+     }{
+        echo ${szs} ${bwhite}Quits${white}:${cyan}$0${white}: ${bcyan}$1 ${blue}\(${purple}$2-${blue}\)${white}
+     }
+  }
+}
+
+on ^mode "*" {
+  if ([$C]==[$1]) {
+     echo ${szs} ${bwhite}cMode${white}: ${bcyan}$0 ${white}sets${bwhite}: $2 $3-${white}
+  }{
+     echo ${szs} ${bwhite}cMode${white}:${cyan}$1${white}: ${bcyan}$0 ${white}sets${bwhite}: $2 $3-${white}
+  }
+}
+
+on ^kick "*" {
+  if ([$C]==[$2]) {
+     echo ${szs} ${bwhite}cKick${white}: ${bcyan}$0 ${white}by${bwhite}: ${bcyan}$1 ${blue}\(${white}$3-${blue}\)${white}
+  }{
+     echo ${szs} ${bwhite}cKick${white}:${cyan}$2${white}: ${bcyan}$0 ${white}by${bwhite}: ${bcyan}$1 ${blue}\(${white}$3-${blue}\)${white}
+  }
+}
+
+on ^who "*" {echo ${szs} ${bwhite}Who${bblue}/${cyan}$0${white}: ${white}$[2]2 ${bcyan}$[9]1 ${blue}\(${bblue}$3${cyan}@${bblue}$4${blue}\) \(${white}hops${bblue}/${bwhite}$left(2 $5)${blue}\)${white}}
+on ^msg "*" {echo ${bblue}\[${bcyan}<-${blue}\(${bwhite}$N${blue}\)${bblue}\] \(${bwhite}$0${bblue}\) ${white}$1- ${blue}\(${bblue}$oextr($userhost())${blue}\)${white}}
+on ^send_msg "*" {echo ${bblue}\[${bcyan}->${blue}\(${bwhite}$0${blue}\)${bblue}\] \(${bwhite}$N${bblue}\) ${white}$1-}
+on ^channel_synch "*" {echo ${szs} ${bwhite}Synch${white}:${cyan}$0${white}: ${white}$tdiff($1).}
+
+on ^topic "*" {
+  if ([$2]) {
+     if ([$C]==[$1]) {
+        echo ${szs} ${bwhite}Topic${white}: ${bcyan}$0${white} sets topic to: ${bwhite}$2-${white}
+     }{
+        echo ${szs} ${bwhite}Topic${white}:${cyan}$1${white}: ${bcyan}$0${white} sets topic to: ${bwhite}$2-${white}  
+     }
+  }{
+     if ([$C]==[$1]) {
+        echo ${szs} ${bwhite}Topic${white}: ${bcyan}$0${white} unsets topic.
+     }{
+        echo ${szs} ${bwhite}Topic${white}:${cyan}$1${white}: ${bcyan}$0${white} unsets topic.
+     }
+  }
+}
+
+on ^301 "*" {
+  echo ${blue}: ${bcyan}away    ${white}: $1-
+}
+
+on ^305 "*" {echo ${szs} ${white}You are now marked as ${bwhite}back${white}. ${blue}\(${bblue}$0${blue}\)${white}}
+on ^306 "*" {echo ${szs} ${white}You are now marked as ${bwhite}away${white}. ${blue}\(${bblue}$0${blue}\)${white}}
+
+on ^311 "*" {
+  echo ${bwhite}.-${bblue}------------${blue}---${bblue}-----${blue}--- -- -
+  echo ${bwhite}| ${bwhite}$1 ${blue}\(${bblue}$2${cyan}@${bblue}$3${blue}\) ${bwhite}\[${white}$tldlookup($right($tldget($3) $3))${bwhite}\]${white}
+  echo ${bblue}| ${bcyan}name    ${bblue}: ${white}$5-
+  if ([$checkuser($1\!$2\@$3 *)]!=[-1]) {
+     ^eval assign ulist.info $checkuser($1!$2@$3 $C)
+     echo ${blue}| ${bcyan}friend  ${bblue}: ${white}F: ${bcyan}$word(0 ${ulist.info})${white} C: ${bcyan}$word(2 ${ulist.info})${white} M: ${bwhite}$word(1 ${ulist.info})${white}
+     assign -ulist.info
+  }
+  if ([$checkshit($1\!$2\@$3 *)]!=[-1]) {
+     ^eval assign ushit.info $checkshit($1!$2@$3 $C)
+     echo ${blue}| ${bcyan}shitlist${bblue}: ${white}M: ${bcyan}$word(1 ${ushit.info})${white} L: ${bcyan}$word(0 ${ushit.info})${white}
+     assign -ushit.info
+  }
+}
+
+on ^312 "*" {echo ${blue}: ${bcyan}serv    ${bblue}: ${bwhite}$1 \[${white}$2-${bwhite}\]${white}}
+on ^313 "*" {echo ${blue}: ${bcyan}ircop   ${bblue}: ${white}Is an IRC Operator.}
+on ^317 "*" {echo ${blue}: ${bcyan}idle    ${bblue}: ${white}$tdiff($2)}
+on ^319 "*" {echo ${blue}| ${bcyan}chan    ${bblue}: ${cyan}$1-}
+on ^329 "*" #
+on ^332 "*" {echo ${szs} ${bwhite}Topic${white}:${cyan}$1${white}: ${bwhite}\[ ${white}$2-${bwhite} \]${white}}
+on ^346 "*" {echo ${szs} ${bwhite}+I${white}: $2}
+on ^347 "*" #
+on ^348 "*" {echo ${szs} ${bwhite}+e${white}: $2}
+on ^349 "*" #
+on ^367 "*" {echo ${szs} ${bwhite}+b${white}: $2}
+on ^368 "*" #
+
+:: clienthelp: function keys
+
+alias ofkeys {
+echo ${blue}.-----------${bblue}-------------${white}------------${bwhite}--- -- - - - -
+echo ${blue}| ${bwhite}F1  ${bblue}: ${bcyan}F-Key help        ${white}(Your here)
+echo ${blue}| ${bwhite}F2  ${bblue}: ${bcyan}Channel lookup    ${white}(Nick scan lookup)
+echo ${blue}| ${bwhite}F3  ${bblue}: ${bcyan}Channel stats     ${white}(Statistics)
+echo ${blue}| ${bwhite}F4  ${bblue}: ${bcyan}Channel mode      ${white}(Check channel modes)
+echo ${blue}| ${bwhite}F5  ${bblue}: ${bcyan}Channel who       ${white}(Host scan lookup)
+echo ${blue}| ${bwhite}F6  ${bblue}: ${bcyan}Channel friends   ${white}(Show friends in channel)
+echo ${blue}| ${bwhite}F7  ${bblue}: ${bcyan}Channel part      ${white}(Leave current channel)
+echo ${blue}| ${bwhite}F8  ${bblue}: ${bcyan}Channel ping      ${white}(Ping current channel)
+echo ${blue}| ${bwhite}F9  ${bblue}: ${bcyan}Channel cleanup   ${white}(Close/kick nonops)
+echo ${blue}| ${bwhite}F10 ${bblue}: ${bcyan}Client settings   ${white}(Check client settings)
+echo ${blue}| ${bwhite}F11 ${bblue}: ${bcyan}CTRL-Key help     ${white}(CTRL shortcuts)
+echo ${blue}`-----------${bblue}-------------${white}------------${bwhite}--- -- - - - -
+}
+
+:: display: title
+
+alias ologo {
+   echo ${bwhite} .-${bblue}------------${blue}--${bblue}-----${blue}--- -- -
+   echo ${bblue}/  ${blue}.${bblue}.${white}.:${bwhite}:o${white}Psessio${bwhite}n:${white}:.${bblue}.${blue}.
+   echo ${bwhite}`--${white}-${bwhite}-${white}--${bblue}----${blue}-${bblue}-----${blue}--------${bblue}[${bwhite}A${white}ndrew${bwhite}X${bblue}]${blue}- -- -- - -${white}
+   echo |  ${white}Type${bwhite}: ${bblue}/${bwhite}motd ${white}to see the message of the day.
+   echo ${bblue}|  ${white}Type${bwhite}: F1    ${white}for help.
+   echo ${bblue}|
+   echo |  ${bwhite}Njoy!${white} ${white}-Andrew
+   echo ${bwhite}`--${white}-${bwhite}-${white}--${blue}----------${bblue}-----${blue}--- -- -${white}
+}
+
+:: function: oextr
+
+alias oextr {
+   @ host = [$0]
+   @ count = [$@host]
+   @ ident = [$index(@ $0)]
+   @ uhost = count - ident + 1
+   @ function_return = [${bblue}$left(${ident} $0)${cyan}@${bblue}$right(${uhost} $0)]
+   ^assign -uhost
+   ^assign -ident
+   ^assign -count
+   ^assign -host
+}
+
+:: function: tldlookup
+
+alias tldlookup {
+   if ([$tld[$0]]!=[]) {
+      @ function_return = [$tld[$0]]
+   }{
+      @ function_return = [Unassigned]
+   }
+}
+
+:: function: tldget
+
+alias tldget {
+    @ host = [$0]
+    @ count = [$@host]
+    @ ltotal = [$rindex(. $0)]
+    @ function_return = count - ltotal + 1
+    ^assign -ltotal
+    ^assign -count
+    ^assign -host
+}
+
+:: toggle: channel joins
+
+alias osj {
+   toggle ${showjoin}
+   @ showjoin = [${tvalue}]
+   echo ${szs} ${bwhite}Status${bblue}: ${white}Show channel joins ${bwhite}${showjoin}${white}.
+}
+
+:: toggle: channel parts
+
+alias osp {
+   toggle ${showpart}
+   @ showpart = [${tvalue}]
+   echo ${szs} ${bwhite}Status${bblue}: ${white}Show channel parts ${bwhite}${showjoin}${white}.
+}
+
+:: toggle: channel quits
+
+alias osq {
+   toggle ${showquit}
+   @ showquit = [${tvalue}]
+   echo ${szs} ${bwhite}Status${bblue}: ${white}Show channel quits ${bwhite}${showjoin}${white}.
+}
+
+:: function: toggle
+
+alias toggle {
+   @ tvalue = [$0]
+   if ([${tvalue}]==[on]) {
+      @ tvalue = [off]
+   }{
+      @ tvalue = [on]
+   }
+}
+
+:: client: oaway
+
+alias oaway {
+   @ awaylog = [on]
+   if ([$0-]) {
+      if (onchannel($N $C)) {
+         /me is away: $0- \[${szsnc}:${awaylog}\]
+      }
+      /away $0- \[${szsnc}l:${awaylog}\]
+   }{
+      if (onchannel($N $C)) {
+         /me is away: ${def.away} \[${szsnc}l:${awaylog}\]
+      }
+      /away ${def.away} \[${szsnc}l:${awaylog}\]
+   }
+}
+
+:: client: oback
+
+alias oback {
+   @ awaylog = [off]
+   if ([$0]) {
+      if (onchannel($N $C)) {
+         /me is back: $0- \[${szsnc}l:${awaylog}\]
+      }
+      /back
+   }{
+      if (onchannel($N $C)) {
+         /me is back: ${def.back} \[${szsnc}l:${awaylog}\]
+      }
+      /back
+   }
+   ^assign -awaylog
+}
+
+:: chaninfo: exceptions
+
+alias excepts {
+   if ([$0]) {
+     @ chan = [$0]
+   }{
+     @ chan = [$C]
+   }
+   echo ${szs} ${cyan}${chan}${white}: \(${bwhite}+e${white}\) list.
+   mode ${chan} +e
+   ^assign -chan
+}
+
+:: chaninfo: invites
+
+alias invites {
+   if ([$0]) {
+     @ chan = [$0]
+   }{
+     @ chan = [$C]
+   }
+   echo ${szs} ${cyan}${chan}${white}: \(${bwhite}+I${white}\) list.
+   mode ${chan} +I
+   ^assign -chan
+}
+
+:: chaninfo: bans
+
+alias bans {
+   if ([$0]) {
+     @ chan = [$0]
+   }{
+     @ chan = [$C]
+   }
+   echo ${szs} ${cyan}${chan}${white}: \(${bwhite}+b${white}\) list.
+   mode ${chan} +b
+   ^assign -chan
+}
+
+:: chanop: cleanup
+
+alias occleanup {
+   if (ischanop($N $C)) {
+      c +im
+      lk
+      ^timer 50 c -im
+   }{
+      echo ${szs} ${white}Rejected${bwhite}: ${white}You are not ${bwhite}+o ${white}in ${cyan}$C
+   }
+}
+
+:: chanop: cleanbans
+
+alias occleanbl {
+   if (ischanop($N $C)) {
+      c +im
+      ^timer 10
+      cdban
+      ^timer 50 c -im
+   }{
+      echo ${szs} ${white}Rejected${bwhite}: ${white}You are not ${bwhite}+o ${white}in ${cyan}$C
+   }
+}
+
+:: chanop: close
+
+alias occlose {
+   if (ischanop($N $C)) {
+      c +i
+      lk
+   }{
+      echo ${szs} ${white}Rejected${bwhite}: ${white}You are not ${bwhite}+o ${white}in ${cyan}$C
+   }
+}
+
+:: chanop: kick [user] <reason>
+
+alias ok {
+   if (ischanop($N $C)) {
+      if ([$0]) {
+         if ([$1]) {
+            quote kick $C $0 :${szsnc}k: $1-
+         }{
+            quote kick $C $0 :${szsnc}k: ${def.kick}
+         }
+      }{
+         echo ${szs} ${white}Usage${bwhite}: ${bblue}/${bwhite}k ${white}[user] <reason>
+      }
+   }{
+      echo ${szs} ${white}Rejected${bwhite}: ${white}You are not ${bwhite}+o ${white}in ${cyan}$C
+   }
+}
+
+:: chanop: bankick [user] <reason>
+
+alias obk {
+   if (ischanop($N $C)) {
+      if ([$0]) {
+         ban $0
+         if ([$1]) {
+            quote kick $C $0 :${szsnc}b: $1-
+         }{
+            quote kick $C $0 :${szsnc}b: ${def.ban}
+         }
+      }{
+         echo ${szs} ${white}Usage${bwhite}: ${bblue}/${bwhite}bk ${white}[user] <reason>
+      }
+   }{
+      echo ${szs} ${white}Rejected${bwhite}: ${white}You are not ${bwhite}+o ${white}in ${cyan}$C
+   }
+}
+
+:: chanop: kickban [user] <reason>
+
+alias okb {
+   if (ischanop($N $C)) {
+      if ([$0]) {
+         if ([$1]) {
+            quote kick $C $0 :${szsnc}b: $1-
+         }{
+            quote kick $C $0 :${szsnc}b: ${def.ban}
+         }
+         ban $0
+      }{
+         echo ${szs} ${white}Usage${bwhite}: ${bblue}/${bwhite}kb ${white}[user] <reason>
+      }
+   }{
+      echo ${szs} ${white}Rejected${bwhite}: ${white}You are not ${bwhite}+o ${white}in ${cyan}$C
+   }
+}
+
+ologo
