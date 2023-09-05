@@ -1,2 +1,2 @@
 # irc
-various irc code for clients and bots
+various irc code i wrote for clients and bots
