@@ -113,6 +113,11 @@ chatnets = {
 
 channels = (
   {
+    name = "#chat";
+    chatnet = "IRCnet";
+    autojoin = "no";
+  },
+  {
     name = "#sourcemod";
     chatnet = "GameSurge";
     autojoin = "yes";
@@ -120,7 +125,7 @@ channels = (
   {
     name = "#a&a";
     chatnet = "AA";
-    autojoin = "no";
+    autojoin = "yes";
   },
   {
     name = "#jupiterbroadcasting";
